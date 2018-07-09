@@ -49,11 +49,17 @@ let pluginsArray = [
 if (isProduction) {
   postCssPlugins.push(
     require('cssnano')({
-      preset: ['default', {
-        discardComments: {
-          removeAll: true
-        }
-      }]
+      preset: 'default',
+      discardComments: {
+        removeAll: true
+      },
+      reduceIdents: {
+        keyframes: false
+      },
+      discardUnused: {
+        keyframes: false
+      },
+      safe: true
     })
   )
 
