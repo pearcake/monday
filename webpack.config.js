@@ -1,5 +1,6 @@
 const path = require('path')
-const config = require(path.join(__dirname, 'livereload.json'))
+const fs = require('fs')
+const config = fs.existsSync(path.join(__dirname, 'livereload.json')) ? require(path.join(__dirname, 'livereload.json')) : {}
 
 const LocalURL = config.url || 'http://localhost'
 const LocalPORT = config.port || 3000
