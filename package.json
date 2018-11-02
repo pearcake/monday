@@ -1,7 +1,13 @@
 {
   "name": "monday",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "Minimalistic dev theme",
+  "author": "Sergey Borisenko",
+  "license": "MIT",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/pearcake/monday.git"
+  },
   "main": "webpack.config.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --progress --mode=production",
@@ -31,8 +37,6 @@
     "webpack": "^4.11.1",
     "webpack-cli": "^3.0.2"
   },
-  "author": "Sergey Borisenko",
-  "license": "MIT",
   "browserslist": [
     ">1%",
     "last 2 versions",
