@@ -6,24 +6,23 @@ const LocalURL = config.url || 'http://localhost'
 const LocalPORT = config.port || 3000
 
 const webpack = require('webpack')
-
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const autoprefixer = require('autoprefixer')
+const browsersync = require('browser-sync')
+const cssnano = require('cssnano')
 
-const isProduction = (process.env.NODE_ENV === 'production')
-
-const extractCSS = new MiniCssExtractPlugin({
-  filename: '/css/[name].css'
-})
+const isProduction = process.env.NODE_ENV === 'production'
 
 const pathsToClean = [
   'assets/dist/**/*.map'
 ]
 
 let postCssPlugins = [
-  require('autoprefixer')()
+  autoprefixer()
 ]
+
 let pluginsArray = [
   new BrowserSyncPlugin({
     host: 'localhost',
@@ -36,20 +35,23 @@ let pluginsArray = [
         ],
         fn: function (event, file) {
           if (event === 'change') {
-            const bs = require('browser-sync').get('bs-webpack-plugin')
-            bs.reload()
+            browsersync.get('bs-webpack-plugin')
+            browsersync.reload()
           }
         }
       }
     ]
   }),
-  new webpack.optimize.ModuleConcatenationPlugin(),
-  extractCSS
+  // new webpack.optimize.ModuleConcatenationPlugin(),
+  new MiniCssExtractPlugin({
+    filename: '/css/[name].css'
+  })
+
 ]
 
 if (isProduction) {
   postCssPlugins.push(
-    require('cssnano')({
+    cssnano({
       preset: 'default',
       discardComments: {
         removeAll: true
@@ -86,7 +88,8 @@ module.exports = {
     'theme': [
       './assets/src/js/theme.js',
       './assets/src/scss/theme.scss'
-    ]
+    ],
+    'theme-ie': './assets/src/js/theme.js',
   },
   output: {
     path: path.join(__dirname, '/assets/dist/'),
@@ -102,29 +105,21 @@ module.exports = {
   },
   module: {
     rules: [
+      // {
+      //   test: /\.(js)$/,
+      //   exclude: [/node_modules/],
+      //   use: {
+      //     loader: 'babel-loader',
+      //     options: {
+      //       presets: [
+      //         ['@babel/preset-env', {
+      //           useBuiltIns: 'entry'
+      //         }]
+      //       ]
+      //     }
+      //   }
+      // },
       {
-        test: /\.(js)$/,
-        use: {
-
-          loader: 'babel-loader',
-          options: {
-            presets: [['env', {
-              babelrc: false,
-              useBuiltIns: 'entry'
-            }]],
-            plugins: [
-              [
-                'transform-runtime',
-                {
-                  'helpers': false,
-                  'polyfill': false,
-                  'regenerator': true
-                }
-              ]
-            ]
-          }
-        }
-      }, {
         test: /(\.scss|\.css)$/,
         use: [
           MiniCssExtractPlugin.loader,
